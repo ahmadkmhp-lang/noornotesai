@@ -1,18 +1,9 @@
-<script>
-async function generateNotes() {
-  let text = document.getElementById("input").value;
-
-  document.getElementById("output").innerText = "Generating AI notes...";
-
-  let res = await fetch("/api/notes", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ text })
-  });
-
-  let data = await res.json();
-  document.getElementById("output").innerText = data.result;
-}
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NoorNotesAI</title>
+</head>
+<body>
+  <h1>🚀 NoorNotesAI Working</h1>
+</body>
+</html>
