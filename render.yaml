@@ -1,0 +1,11 @@
+version: "1"
+services:
+- type: web
+  name: NoorNotesAi
+  runtime: node
+  repo: https://github.com/ahmadkmhp-lang/noornotesai
+  plan: free
+  region: ohio
+  buildCommand: npm install
+  startCommand: node index.js
+  autoDeployTrigger: commit
