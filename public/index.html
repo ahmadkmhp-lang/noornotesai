@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Noor Notes AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    textarea {
+      width: 90%;
+      height: 120px;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+    button {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      background: purple;
+      color: white;
+      font-size: 16px;
+    }
+    #output {
+      margin-top: 20px;
+      padding: 15px;
+      background: #1e293b;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🚀 Noor Notes AI</h1>
+
+<textarea id="input" placeholder="Apna topic likho..."></textarea><br>
+
+<button onclick="generateNotes()">Generate Notes</button>
+
+<div id="output"></div>
+
+<script>
+function generateNotes() {
+  let text = document.getElementById("input").value;
+
+  let notes = `
+📌 Notes:
+- ${text}
+- Important point 1
+- Important point 2
+- Summary ready ✔
+`;
+
+  document.getElementById("output").innerText = notes;
+}
+</script>
+
+</body>
+</html>
