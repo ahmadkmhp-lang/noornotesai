@@ -1,36 +1,16 @@
 const express = require("express");
-const app = express();
+const path = require("path");
 
-app.use(express.json());
-app.use(express.static("public"));
+const app = express();
 
 const PORT = process.env.PORT || 10000;
 
-app.post("/api/notes", async (req, res) => {
-  const userText = req.body.text;
+// 👇 static folder serve करेगा
+app.use(express.static("public"));
 
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: "You generate short study notes." },
-          { role: "user", content: userText }
-        ]
-      })
-    });
-
-    const data = await response.json();
-    res.json({ result: data.choices[0].message.content });
-
-  } catch (error) {
-    res.json({ result: "Error generating notes" });
-  }
+// 👇 main route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.listen(PORT, () => {
