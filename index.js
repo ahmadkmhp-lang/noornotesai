@@ -14,11 +14,17 @@ app.post("/ai", async (req,res)=>{
 
     const data = await response.json();
 
-    res.json({
-      result: data.output[0].content[0].text
-    });
+    // SAFE parsing
+    let result = "AI error ❌";
+
+    if (data && data.output && data.output[0] && data.output[0].content) {
+      result = data.output[0].content[0].text;
+    }
+
+    res.json({ result });
 
   } catch (err) {
-    res.json({ result: "Error in AI ❌" });
+    console.log(err);
+    res.json({ result: "Server error ❌" });
   }
 });
