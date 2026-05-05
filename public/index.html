@@ -2,90 +2,31 @@
 <html>
 <head>
   <title>NoorNotesAI</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-
-    textarea {
-      width: 90%;
-      height: 120px;
-      margin: 10px;
-      padding: 10px;
-      border-radius: 10px;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .save { background: green; color: white; }
-    .ai { background: purple; color: white; }
-
-    .notes {
-      margin-top: 20px;
-      text-align: left;
-      max-width: 600px;
-      margin-inline: auto;
-    }
-  </style>
 </head>
-
 <body>
+  <h1>🚀 NoorNotesAI</h1>
 
-<h1>🚀 NoorNotesAI</h1>
+  <textarea id="text" placeholder="Write something..."></textarea><br><br>
 
-<textarea id="note" placeholder="Write your notes..."></textarea><br>
+  <button onclick="generate()">AI Generate</button>
 
-<button class="save" onclick="saveNote()">Save Note</button>
-<button class="ai" onclick="aiNote()">AI Generate</button>
+  <p id="output"></p>
 
-<div class="notes" id="notes"></div>
+  <script>
+    async function generate() {
+      const text = document.getElementById("text").value;
 
-<script>
-async function saveNote() {
-  const note = document.getElementById("note").value;
+      const res = await fetch("/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text })
+      });
 
-  await fetch("/save", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ note })
-  });
-
-  loadNotes();
-}
-
-async function loadNotes() {
-  const res = await fetch("/notes");
-  const data = await res.json();
-
-  document.getElementById("notes").innerHTML =
-    data.map(n => `<p>📌 ${n.text}</p>`).join("");
-}
-
-async function aiNote() {
-  const note = document.getElementById("note").value;
-
-  const res = await fetch("/ai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt: note })
-  });
-
-  const data = await res.json();
-  document.getElementById("note").value = data.result;
-}
-
-loadNotes();
-</script>
-
+      const data = await res.json();
+      document.getElementById("output").innerText = data.message;
+    }
+  </script>
 </body>
 </html>
