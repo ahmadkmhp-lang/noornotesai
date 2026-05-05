@@ -1,17 +1,15 @@
 import express from "express";
+import path from "path";
 
 const app = express();
 
 app.use(express.json());
+app.use(express.static("public"));
 
 // AI API
 app.post('/ai', async (req, res) => {
-  res.json({ message: "AI working 🚀" });
-});
-
-// Home route
-app.get('/', (req, res) => {
-  res.send("Server running 🚀");
+  const { text } = req.body;
+  res.json({ message: "AI Response: " + text });
 });
 
 const PORT = process.env.PORT || 10000;
