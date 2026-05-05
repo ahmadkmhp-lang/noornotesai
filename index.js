@@ -3,22 +3,16 @@ const app = express();
 
 app.use(express.json());
 
-// TEST route
+// Test route
 app.get("/", (req, res) => {
   res.send("Server running 🚀");
 });
 
 // AI route
-app.post("/ai", (req, res) => {
-  const { text } = req.body;
-
-  res.json({
-    result: "AI response: " + text
-  });
+app.post("/ai", async (req, res) => {
+  const text = req.body.text;
+  res.json({ response: "AI response: " + text });
 });
 
 const PORT = process.env.PORT || 10000;
-
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
+app.listen(PORT, () => console.log("Server running 🚀"));
