@@ -1,19 +1,22 @@
-import express from "express";
-import path from "path";
 
+const express = require("express");
 const app = express();
 
 app.use(express.json());
-app.use(express.static("public"));
 
-// AI API
-app.post('/ai', async (req, res) => {
-  const { text } = req.body;
-  res.json({ message: "AI Response: " + text });
+// AI route
+app.post("/ai", (req, res) => {
+  const text = req.body.text;
+
+  res.json({
+    result: "AI response: " + text
+  });
 });
 
-const PORT = process.env.PORT || 10000;
+app.get("/", (req, res) => {
+  res.send("Server running 🚀");
+});
 
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+app.listen(3000, () => {
+  console.log("Server running 🚀");
 });
