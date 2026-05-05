@@ -5,29 +5,32 @@
 </head>
 <body>
 
-  <h1>🚀 NoorNotesAI</h1>
+<h1>🚀 NoorNotesAI</h1>
 
-  <input type="text" id="note" placeholder="Write something..." />
-  <br><br>
+<input type="text" id="inputText" placeholder="Write something..." />
+<br><br>
 
-  <button onclick="generateAI()">AI Generate</button>
+<button onclick="generateAI()">AI Generate</button>
 
-  <script>
-    async function generateAI() {
-      const text = document.getElementById("note").value;
+<p id="output"></p>
 
-      const res = await fetch("/ai", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ text })
-      });
+<script>
+async function generateAI() {
+  const text = document.getElementById("inputText").value;
 
-      const data = await res.json();
-      alert(data.result);
-    }
-  </script>
+  const res = await fetch("/ai", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ text })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("output").innerText = data.response;
+}
+</script>
 
 </body>
 </html>
