@@ -1,30 +1,21 @@
-app.post("/ai", async (req,res)=>{
-  try {
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        input: req.body.prompt
-      })
-    });
+import express from "express";
 
-    const data = await response.json();
+const app = express();
 
-    // SAFE parsing
-    let result = "AI error ❌";
+app.use(express.json());
 
-    if (data && data.output && data.output[0] && data.output[0].content) {
-      result = data.output[0].content[0].text;
-    }
+// AI API
+app.post('/ai', async (req, res) => {
+  res.json({ message: "AI working 🚀" });
+});
 
-    res.json({ result });
+// Home route
+app.get('/', (req, res) => {
+  res.send("Server running 🚀");
+});
 
-  } catch (err) {
-    console.log(err);
-    res.json({ result: "Server error ❌" });
-  }
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
 });
