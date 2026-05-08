@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>NoorNotesAI</title>
 </head>
+
 <body>
 
 <h1>🚀 NoorNotesAI</h1>
 
-<textarea id="prompt" placeholder="Ask AI..."></textarea>
+<textarea id="prompt"></textarea>
+
+<br><br>
 
 <button onclick="askAI()">Send</button>
 
 <p id="result"></p>
 
 <script>
+
 async function askAI() {
 
 const text = document.getElementById("prompt").value;
@@ -31,9 +36,10 @@ prompt: text
 const data = await response.json();
 
 document.getElementById("result").innerText =
-data.reply || JSON.stringify(data);
+data.reply;
 
 }
+
 </script>
 
 </body>
