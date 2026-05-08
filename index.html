@@ -1,145 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NoorNotesAI</title>
+<script>
 
-  <style>
-    body{
-      margin:0;
-      padding:0;
-      background:#0f172a;
-      font-family:Arial, sans-serif;
-      color:white;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-    }
+async function sendMessage() {
 
-    .chat-box{
-      width:90%;
-      max-width:500px;
-      background:#111827;
-      border-radius:20px;
-      padding:20px;
-      box-shadow:0 0 20px rgba(0,0,0,0.5);
-    }
+    const input = document.getElementById("prompt");
+    const messages = document.getElementById("messages");
 
-    h1{
-      text-align:center;
-      margin-bottom:20px;
-    }
+    const text = input.value.trim();
 
-    #messages{
-      height:300px;
-      overflow-y:auto;
-      border-radius:10px;
-      padding:10px;
-      background:#1e293b;
-      margin-bottom:15px;
-    }
+    if (!text) return;
 
-    .msg{
-      margin:10px 0;
-      padding:10px;
-      border-radius:10px;
-    }
+    messages.innerHTML += `
+        <div class="msg user">${text}</div>
+    `;
 
-    .user{
-      background:#2563eb;
-      text-align:right;
-    }
+    input.value = "";
 
-    .bot{
-      background:#374151;
-    }
+    try {
 
-    .input-area{
-      display:flex;
-      gap:10px;
-    }
-
-    input{
-      flex:1;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      outline:none;
-    }
-
-    button{
-      padding:12px 20px;
-      border:none;
-      border-radius:10px;
-      background:#2563eb;
-      color:white;
-      cursor:pointer;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="chat-box">
-    <h1>🤖 NoorNotesAI</h1>
-
-    <div id="messages">
-      <div class="msg bot">👋 Hello! I am NoorNotesAI.</div>
-    </div>
-
-    <div class="input-area">
-      <input type="text" id="userInput" placeholder="Ask anything..." />
-      <button onclick="sendMessage()">Send</button>
-    </div>
-  </div>
-
-  <script>
-    async function sendMessage() {
-
-      const input = document.getElementById("userInput");
-      const messages = document.getElementById("messages");
-
-      const userText = input.value;
-
-      if(!userText) return;
-
-      messages.innerHTML += `
-        <div class="msg user">${userText}</div>
-      `;
-
-      input.value = "";
-
-      try{
-
-        const response = await fetch("/chat", {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body: JSON.stringify({
-            message:userText
-          })
+        const response = await fetch("/ai", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                prompt: text
+            })
         });
 
         const data = await response.json();
 
         messages.innerHTML += `
-          <div class="msg bot">${data.reply}</div>
+            <div class="msg bot">${data.reply}</div>
         `;
 
-      }catch(error){
+    } catch (error) {
 
         messages.innerHTML += `
-          <div class="msg bot">AI Error</div>
+            <div class="msg bot">Server Error</div>
         `;
 
-      }
-
-      messages.scrollTop = messages.scrollHeight;
+        console.log(error);
     }
-  </script>
 
-</body>
-</html>
+    messages.scrollTop = messages.scrollHeight;
+}
+
+</script>
