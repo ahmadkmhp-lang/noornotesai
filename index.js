@@ -4,7 +4,6 @@ const path = require("path");
 const app = express();
 
 app.use(express.json());
-
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
@@ -12,20 +11,16 @@ app.get("/", (req, res) => {
 });
 
 app.post("/ai", async (req, res) => {
-
-  const prompt = req.body.prompt;
-
   try {
+    const prompt = req.body.prompt;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
           contents: [
             {
@@ -42,23 +37,22 @@ app.post("/ai", async (req, res) => {
 
     const data = await response.json();
 
+    console.log(data);
+
     const reply =
-      data.candidates[0].content.parts[0].text;
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No AI response found";
 
     res.json({
-      reply: reply,
+      reply,
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.json({
-      reply: "Error getting AI response",
+      reply: "AI Error",
     });
-
   }
-
 });
 
 const PORT = process.env.PORT || 10000;
