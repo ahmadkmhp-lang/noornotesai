@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const fetch = require("node-fetch");
 
 const app = express();
 
@@ -37,14 +38,20 @@ app.post("/ai", async (req, res) => {
 
     const data = await response.json();
 
+    console.log(data);
+
     const reply =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "No AI response found";
 
     res.json({ reply });
+
   } catch (error) {
     console.log(error);
-    res.json({ reply: "AI Error" });
+
+    res.json({
+      reply: "AI Error",
+    });
   }
 });
 
