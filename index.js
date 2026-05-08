@@ -1,62 +1,28 @@
-const express = require("express");
-const path = require("path");
-
-const app = express();
-
-app.use(express.json());
-app.use(express.static("public"));
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-app.post("/ai", async (req, res) => {
-  try {
-    const prompt = req.body.prompt;
-
-    const response = await fetch(
-      `https://generativelanguage.gemini-2.0-flash:googleapis.com/v1beta/models/:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
+const response = await fetch(
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      contents: [
+        {
+          parts: [
             {
-              parts: [
-                {
-                  text: prompt,
-                },
-              ],
+              text: prompt,
             },
           ],
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    console.log(data);
-
-    const reply =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No AI response found";
-
-    res.json({
-      reply,
-    });
-  } catch (error) {
-    console.log(error);
-
-    res.json({
-      reply: "AI Error",
-    });
+        },
+      ],
+    }),
   }
-});
+);
 
-const PORT = process.env.PORT || 10000;
+const data = await response.json();
 
-app.listen(PORT, () => {
-  console.log("Server running 🚀");
-});
+const reply =
+  data.candidates?.[0]?.content?.parts?.[0]?.text ||
+  "No AI response found";
+
+res.json({ reply });
