@@ -1,237 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NoorNotesAI</title>
-
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial, sans-serif;
-    }
-
-    body{
-      background:#0f172a;
-      color:white;
-      height:100vh;
-      display:flex;
-    }
-
-    .sidebar{
-      width:260px;
-      background:#111827;
-      padding:20px;
-      border-right:1px solid #1f2937;
-    }
-
-    .logo{
-      font-size:24px;
-      font-weight:bold;
-      margin-bottom:30px;
-    }
-
-    .new-chat{
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      background:#2563eb;
-      color:white;
-      font-size:16px;
-      cursor:pointer;
-      margin-bottom:20px;
-    }
-
-    .chat-history{
-      color:#cbd5e1;
-      font-size:14px;
-    }
-
-    .main{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      height:100vh;
-    }
-
-    .topbar{
-      padding:20px;
-      border-bottom:1px solid #1e293b;
-      font-size:20px;
-      font-weight:bold;
-      background:#0f172a;
-    }
-
-    .chat-box{
-      flex:1;
-      overflow-y:auto;
-      padding:20px;
-      display:flex;
-      flex-direction:column;
-      gap:15px;
-    }
-
-    .message{
-      max-width:80%;
-      padding:15px;
-      border-radius:15px;
-      line-height:1.5;
-    }
-
-    .user{
-      background:#2563eb;
-      align-self:flex-end;
-    }
-
-    .bot{
-      background:#1e293b;
-      align-self:flex-start;
-    }
-
-    .input-area{
-      display:flex;
-      padding:20px;
-      border-top:1px solid #1e293b;
-      background:#0f172a;
-    }
-
-    input{
-      flex:1;
-      padding:15px;
-      border:none;
-      border-radius:12px;
-      outline:none;
-      background:#1e293b;
-      color:white;
-      font-size:16px;
-    }
-
-    button{
-      margin-left:10px;
-      padding:15px 25px;
-      border:none;
-      border-radius:12px;
-      background:#2563eb;
-      color:white;
-      cursor:pointer;
-      font-size:16px;
-    }
-
-    button:hover{
-      background:#1d4ed8;
-    }
-
-    @media(max-width:768px){
-
-      .sidebar{
-        display:none;
-      }
-
-      .message{
-        max-width:95%;
-      }
-
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body>
+<body style="background:#0b1020;color:white;font-family:sans-serif;padding:20px;">
 
-  <div class="sidebar">
-    <div class="logo">🚀 NoorNotesAI</div>
+<h1>👋 Hello! I am NoorNotesAI.</h1>
 
-    <button class="new-chat">
-      + New Chat
-    </button>
+<input id="prompt" placeholder="Ask anything..."
+style="width:70%;padding:10px;">
 
-    <div class="chat-history">
-      <p>• AI Chat</p>
-      <br>
-      <p>• Smart Assistant</p>
-      <br>
-      <p>• Future Tools</p>
-    </div>
-  </div>
+<button onclick="sendMessage()">Send</button>
 
-  <div class="main">
+<div id="chat" style="margin-top:20px;"></div>
 
-    <div class="topbar">
-      NoorNotesAI
-    </div>
+<script>
+async function sendMessage() {
 
-    <div class="chat-box" id="chatBox">
+  const prompt =
+    document.getElementById("prompt").value;
 
-      <div class="message bot">
-        👋 Hello! I am NoorNotesAI.
-      </div>
+  const res = await fetch("/ai", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ prompt })
+  });
 
-    </div>
+  const data = await res.json();
 
-    <div class="input-area">
-
-      <input 
-        type="text" 
-        id="prompt"
-        placeholder="Ask anything..."
-      >
-
-      <button onclick="sendMessage()">
-        Send
-      </button>
-
-    </div>
-
-  </div>
-
-  <script>
-
-    async function sendMessage(){
-
-      const input = document.getElementById("prompt");
-      const chatBox = document.getElementById("chatBox");
-
-      const userText = input.value;
-
-      if(!userText) return;
-
-      chatBox.innerHTML += `
-        <div class="message user">
-          ${userText}
-        </div>
-      `;
-
-      input.value = "";
-
-      const response = await fetch("/ai",{
-
-        method:"POST",
-
-        headers:{
-          "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify({
-          prompt:userText
-        })
-
-      });
-
-      const data = await response.json();
-
-      chatBox.innerHTML += `
-        <div class="message bot">
-          ${data.reply}
-        </div>
-      `;
-
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-    }
-
-  </script>
+  document.getElementById("chat").innerHTML += `
+    <p><b>You:</b> ${prompt}</p>
+    <p><b>AI:</b> ${data.reply}</p>
+  `;
+}
+</script>
 
 </body>
 </html>
