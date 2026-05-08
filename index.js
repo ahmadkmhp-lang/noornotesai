@@ -1,18 +1,28 @@
 const express = require("express");
+const path = require("path");
+
 const app = express();
 
 app.use(express.json());
 
-// Test route
+app.use(express.static(__dirname));
+
 app.get("/", (req, res) => {
-  res.send("Server running 🚀");
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// AI route
 app.post("/ai", async (req, res) => {
-  const text = req.body.text;
-  res.json({ response: "AI response: " + text });
+
+  const prompt = req.body.prompt;
+
+  res.json({
+    reply: "AI Response: " + prompt
+  });
+
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log("Server running 🚀"));
+
+app.listen(PORT, () => {
+  console.log("Server running 🚀");
+});
