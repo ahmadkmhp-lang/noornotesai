@@ -7,28 +7,32 @@
 
 <h1>🚀 NoorNotesAI</h1>
 
-<input type="text" id="inputText" placeholder="Write something..." />
-<br><br>
+<textarea id="prompt" placeholder="Ask AI..."></textarea>
 
-<button onclick="generateAI()">AI Generate</button>
+<button onclick="askAI()">Send</button>
 
-<p id="output"></p>
+<p id="result"></p>
 
 <script>
-async function generateAI() {
-  const text = document.getElementById("inputText").value;
+async function askAI() {
 
-  const res = await fetch("/ai", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ text })
-  });
+const text = document.getElementById("prompt").value;
 
-  const data = await res.json();
+const response = await fetch("/ai", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+prompt: text
+})
+});
 
-  document.getElementById("output").innerText = data.response;
+const data = await response.json();
+
+document.getElementById("result").innerText =
+data.reply || JSON.stringify(data);
+
 }
 </script>
 
