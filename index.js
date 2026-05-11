@@ -15,23 +15,22 @@ app.post("/ai", async (req, res) => {
     const prompt = req.body.prompt;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      "https://openrouter.ai/api/v1/chat/completions",
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          contents: [
+          model: "openai/gpt-3.5-turbo",
+          messages: [
             {
-              parts: [
-                {
-                  text: prompt,
-                },
-              ],
-            },
-          ],
-        }),
+              role: "user",
+              content: prompt
+            }
+          ]
+        })
       }
     );
 
@@ -40,7 +39,7 @@ app.post("/ai", async (req, res) => {
     console.log(data);
 
     const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      data.choices?.[0]?.message?.content ||
       "No AI response found";
 
     res.json({ reply });
@@ -49,7 +48,7 @@ app.post("/ai", async (req, res) => {
     console.log(error);
 
     res.json({
-      reply: "AI Error",
+      reply: "AI Error"
     });
   }
 });
